@@ -3,7 +3,6 @@ use lut::{self, MultiReverseCommitGraph};
 use std::io::{stdin, stdout, BufRead, BufReader, Write};
 use git2::Oid;
 use {Options, Stack};
-use find;
 use indicatif::ProgressBar;
 
 const PROGRESS_RATE: usize = 25;
@@ -56,10 +55,6 @@ fn deplete_requests_from_stdin(luts: &MultiReverseCommitGraph) -> Result<(), Err
 }
 
 pub fn run(opts: Options) -> Result<(), Error> {
-    let tree = opts.tree.clone();
     let luts = lut::build(opts)?;
-    match tree {
-        None => deplete_requests_from_stdin(&luts),
-        Some(tree) => find::commit(&tree, luts),
-    }
+    deplete_requests_from_stdin(&luts)
 }
